@@ -1,0 +1,36 @@
+if(!exists("badges_include")) {
+	print("Loading packages.")
+	require(RMySQL)
+	require(lme4)
+	require(lmerTest)
+	require(MuMIn)
+	require(car)
+	require(MASS)
+	require(effects)
+	require(effsize)
+	require(sqldf)
+	require(MASS)
+	require(pROC)
+	require(plyr)
+
+	print("Loading data.")
+	package_info = read.csv("../data/master_info.csv")
+	time_since_update = read.csv("../data/master_time_since_update.csv")
+	freshness = read.csv("../data/master_freshness.csv")
+	nearby_classes = read.csv("../data/master_nearby.csv")
+	pr_tests = read.csv("../data/master_prtests.csv")
+	issue_closings = read.csv("../data/master_issue_closings.csv")
+	tests = read.csv("../data/master_tests.csv")
+	readme_sizes = read.csv("../data/readme_sizes.csv")
+
+	print("Loading timeseries data.")
+	ts.freshness = read.csv("../data/timeseries_freshness.csv")
+	ts.prtests = read.csv("../data/timeseries_prtests.csv")
+	ts.issues = read.csv("../data/timeseries_issue_closings.csv")
+	ts.tests = read.csv("../data/timeseries_tests.csv")
+	ts.downloads = read.csv("../data/timeseries_downloads.csv")
+	npm_inflation = read.csv("../data/npm_inflation.csv")
+
+	badges_include = TRUE
+	print("Complete.")
+}
