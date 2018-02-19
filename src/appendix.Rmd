@@ -67,10 +67,10 @@ Listed below are the models and survey questions used for the study.
 Effect plots are provided to assist in the interpretation
 of the longitudinal models.
 
-The tables were created using the R package *stargazer* by Marek Hlavac.\footnote{https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf}
+The tables were created using the R package *stargazer* by Marek Hlavac.\footnote{\url{https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf}}
 
 Our data set and R source code, used for the paper and to generate this appendix,
-is publicly available.\footnote{https://somewhere}
+is publicly available.\footnote{\url{https://github.com/CMUSTRUDEL/npm-badges}}
 
 \newpage
 
