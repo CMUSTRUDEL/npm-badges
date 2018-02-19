@@ -1,6 +1,6 @@
 ---
 title: "Appendix"
-geometry: margin=1in
+geometry: margin=0.5in
 header-includes:
   - \usepackage{rotating}
 output:

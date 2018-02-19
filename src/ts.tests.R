@@ -1,5 +1,6 @@
 source("include.R")
 
+#fixme
 if(!exists("df.ts.tests")) {
 df.ts.tests = join(ts.tests, package_info, by="slug")
 
@@ -14,10 +15,16 @@ if("RMySQL" %in% (.packages()) ) {
 }
 num_zero = sqldf("select slug, count(*) as non_zeros from 'df.ts.tests' where testBytes>0 group by slug")
 
+cov_data = subset(df.ts.tests, (slug %in% subset(num_zero, non_zeros>=19)$slug) &
+	((tool=="coveralls" | tool=="codecov" | tool=="codeclimate") | hasCovBadge==1))
 
-df.ts.tests = subset(df.ts.tests, (slug %in% subset(num_zero, non_zeros>=19)$slug));
+ci_data = subset(df.ts.tests, (slug %in% subset(num_zero, non_zeros>=19)$slug) &
+	((tool=="travis" | tool=="circle") | hasCIBadge==1))
 
-df.ts.tests = merge(df.ts.tests, nearby_classes, by.x="slug", by.y="slug")
+df.ts.tests = subset(df.ts.tests, slug %in% unique(ci_data$slug) |
+	slug %in% unique(cov_data$slug) )
+
+df.ts.tests = join(df.ts.tests, nearby_classes, by="slug")
 df.ts.tests$hasInfo = factor(df.ts.tests$hasInfo)
 df.ts.tests$hasQA = factor(df.ts.tests$hasQA_ci | df.ts.tests$hasQA_cov | df.ts.tests$hasQA_other)
 df.ts.tests$hasOther = factor(df.ts.tests$hasDepmgr | df.ts.tests$hasPopularity | df.ts.tests$hasSupport)
