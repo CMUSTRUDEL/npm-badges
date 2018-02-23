@@ -36,3 +36,33 @@ mod.ts.downloads = lme4::lmer(log(downloads_adj+1) ~
 	time_after * hasOtherBadge +
 	(1+intervention|name),
 	data=subset(df.ts.downloads, time != 10))
+
+
+# RDD boxplots
+
+keepNames = subset(df.ts.downloads, time == 19 & downloads < 1e5)$name
+
+ggplot(subset(df.ts.downloads, name %in% keepNames & 
+                downloads_adj<=10^4 & 
+                downloads_adj>=10), 
+       aes(x=factor(time - 10), y=downloads_adj)) + 
+  geom_boxplot(outlier.shape=NA)+ #outlier.size = -10, coef = 100)  +
+  # stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
+  # coord_fixed(ratio=1.65) + 
+  geom_vline(xintercept=10, col="purple", lwd=2, alpha=0.5) + 
+  scale_x_discrete(breaks = c(-8, -6, -4, -2, 0, 2, 4, 6, 8)) +
+  labs(x = "Month index relative to badge", y = "Downloads") + 
+  # ggtitle("Download Counts") +
+  scale_y_log10(breaks = c(10^1, 10^2, 10^3, 10^4), #10^5, 10^6, 10^7, 10^8),
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  theme_bw() +
+  theme(#legend.position = c(0.8, 0.1), 
+    #legend.direction="horizontal",
+    axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) 
+
+ggsave("../plots/rdd-downloads.pdf", width = 2.5, height = 2.5)
+

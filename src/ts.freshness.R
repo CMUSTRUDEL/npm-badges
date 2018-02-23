@@ -47,6 +47,13 @@ mod.ts.fresh = lme4::lmer(log(freshness+1) ~
 	(1|slug),
 	data=subset(df.ts.fresh, time != 10))
 
+# vif.mer(mod.ts.fresh)
+# summary(mod.ts.fresh)
+# Anova(mod.ts.fresh, type=2)
+# 
+# require(MuMIn)
+# r.squaredGLMM(mod.ts.fresh)
+
 mod.ts.security = lme4::lmer(log(security+1) ~
 	log(dependencies+1) +
 	log(dependents+1) +
@@ -58,3 +65,5 @@ mod.ts.security = lme4::lmer(log(security+1) ~
 	intervention * hasDepmgr * hasInfo + 
 	(1|slug),
 	data=subset(df.ts.security, time != 10))
+
+

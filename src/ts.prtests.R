@@ -52,7 +52,8 @@ mod.ts.prtests = glmer(proportion ~
 
 # RDD boxplots
 
-ggplot(df.ts.prtests, aes(x=factor(month_idx), y=proportion)) + 
+ggplot(df.ts.prtests, 
+       aes(x=factor(month_idx), y=proportion)) + 
   geom_boxplot()+ #outlier.size = -10, coef = 100)  +
   # stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
   # coord_fixed(ratio=1.65) + 
@@ -69,4 +70,27 @@ ggplot(df.ts.prtests, aes(x=factor(month_idx), y=proportion)) +
     panel.border = element_blank(),
     panel.background = element_blank())
 
-ggsave("../plots/rdd-pr-tests2.pdf", width = 3.5, height = 3)
+ggsave("../plots/rdd-pr-tests.pdf", width = 3.5, height = 3)
+
+
+ggplot(subset(df.ts.prtests, proportion<=0.5), 
+       aes(x=factor(month_idx), y=proportion)) + 
+  geom_boxplot(outlier.shape=NA)+ #outlier.size = -10, coef = 100)  +
+  # stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
+  # coord_fixed(ratio=1.65) + 
+  geom_vline(xintercept=10, col="purple", lwd=10, alpha=0.15) + 
+  labs(x = "Month index relative to badge", y = "Fraction PRs with tests") + 
+  # ggtitle("PR Best Practices") +
+  scale_x_discrete(breaks = c(-8, -6, -4, -2, 0, 2, 4, 6, 8)) +
+  scale_y_continuous(limits = c(0, 0.5)) +
+  theme_bw() +
+  theme(#legend.position = c(0.8, 0.1), 
+    #legend.direction="horizontal",
+    axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank())
+
+ggsave("../plots/rdd-pr-tests2.pdf", width = 2.5, height = 2.5)
+
