@@ -67,3 +67,50 @@ f.num.badges = (downloads ~
 mod.downloads.base = glm.nb(f.downloads.base, data=df.downloads, control=glm.control(maxit=100))
 mod.downloads.full = glm.nb(f.downloads.full, data=df.downloads, control=glm.control(maxit=100))
 mod.num.badges = glm.nb(f.num.badges, data=df.downloads)
+
+
+bp_plots = function(zz.bot, main, legend_position){
+  bp = data.frame(downloads=zz.bot$downloads, 
+                  has_badge=zz.bot$hasQABadge==1,
+                  group=rep("QA",nrow(zz.bot)))
+  bp = rbind(bp, data.frame(downloads=zz.bot$downloads,
+                            has_badge=zz.bot$hasPopularityBadge==1,
+                            group=rep("Pop",nrow(zz.bot))))
+  bp = rbind(bp, data.frame(downloads=zz.bot$downloads,
+                            has_badge=zz.bot$hasInfoBadge==1,
+                            group=rep("Info",nrow(zz.bot))))
+  require(beanplot)
+  beanplot(downloads ~ has_badge * group, data=bp, ll = 0.04,
+           main = main,
+           ymax=c(0,10^5),
+           side = "both", xlab="", ylab="Downloads",
+           col = list("lightblue", c("purple", "black")), 
+           overallline="median", beanlines="median", boxwex=0.9,
+           axes=F, bw="nrd", what=c(0,1,1,0), cutmin=0, cutmax=10^5, log="y")
+  axis(1, at=1:length(unique(bp$group)),  
+       labels=c("QA", "Popularity", "Info"))
+  yrange = -1:10^5+1 #ceiling(log10(max(zz.bot$downloads)))+1
+  axis(2, at=sapply(yrange, function(i) 10^(2*i)), 
+       labels=sapply(yrange, function(i) as.expression(bquote(10^ .((2*i))))))
+  legend(legend_position, 
+         # inset = .005, 
+         fill = c("lightblue", "purple"),
+         legend = c("Badge: FALSE", "TRUE"), box.lty=0, box.col = "white", 
+         bg = "white", horiz=T)#, title="Has badge:") 
+}
+
+cohen_func = function(zz.all, badge, resp){
+  w = zz.all[zz.all[,which(names(zz.all) == badge)]=="1",]
+  wo = zz.all[zz.all[,which(names(zz.all) == badge)]=="0",]
+  cliff.delta(w[,which(names(w) == resp)], wo[,which(names(wo) == resp)])
+}
+
+pdf(file="../plots/popularity_monthly.pdf", width=4, height=2.5)
+par(mar=c(4, 4, 1, 0))
+bp_plots(subset(df.downloads, downloads>0 & downloads<=10^6), "Popularity", "topright")
+mtext(c(paste("(",round(cohen_func(df.downloads, "hasQABadge", "downloads")$estimate,2),")", sep=""),
+        paste("(",round(cohen_func(df.downloads, "hasPopularityBadge", "downloads")$estimate,2),")", sep=""),
+        paste("(",round(cohen_func(df.downloads, "hasInfoBadge", "downloads")$estimate,2),")", sep="")),
+      side=1,line=2,at=1:5)
+dev.off()
+

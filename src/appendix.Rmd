@@ -39,9 +39,12 @@ if(!file.exists("../AppendixImage.RData")) {
 	print("Loading supporting models...")
 	source("issue_closings.R")
 	source("ts.issue_closings.R")
-} else if(!already_loaded) {
+	
+	already_loaded = TRUE
+} else if(!exists("already_loaded")) {
 	print("Loading from image...")
 	load("../AppendixImage.RData")
+	already_loaded = TRUE
 }
 ```
 
@@ -60,6 +63,7 @@ source("util.R")
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, error=TRUE)
 ```
+
 
 # Foreword
 

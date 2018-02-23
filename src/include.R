@@ -12,6 +12,7 @@ if(!exists("badges_include")) {
 	require(MASS)
 	require(pROC)
 	require(plyr)
+  require(beanplot)
 
 	print("Loading data.")
 	package_info = read.csv("../data/master_info.csv")
