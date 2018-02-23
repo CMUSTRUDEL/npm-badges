@@ -67,3 +67,32 @@ mod.ts.security = lme4::lmer(log(security+1) ~
 	data=subset(df.ts.security, time != 10))
 
 
+# RDD boxplots
+
+sFR = df.ts.fresh
+sFR$hasDepmgr = factor(sFR$hasDepmgr, labels=c("hasDepMgmt: FALSE", "hasDepMgmt: TRUE"))
+sFR$hasInfo = factor(sFR$hasInfo, labels=c("hasInfo: FALSE", "hasInfo: TRUE"))
+sFR = subset(sFR, (hasInfo=="hasInfo: FALSE" & hasDepmgr=="hasDepMgmt: TRUE") |
+               (hasInfo=="hasInfo: TRUE" & hasDepmgr=="hasDepMgmt: FALSE"))
+
+ggplot(sFR, 
+       aes(x = factor(time), y = freshness )) + 
+  geom_boxplot(outlier.size=0.5)  +
+  facet_grid(. ~ hasInfo*hasDepmgr) +
+  geom_vline(xintercept=10, col="purple", lwd=2, alpha=0.5) + 
+  scale_x_discrete(breaks = c(-8, -6, -4, -2, 0, 2, 4, 6, 8)) +
+  scale_y_log10(breaks = c(0, 10^1, 10^2, 10^3, 10^4, 10^5, 10^6, 10^7, 10^8),
+                labels = scales::trans_format("log10", scales::math_format(10^.x)),
+                limits=c(5, 100)) +
+  labs(x = "Month index relative to badge", y = "Freshness") + 
+  # ggtitle("Dependency Freshness") +
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  theme(strip.background = element_blank());
+
+ggsave("~/R/badges/rdd-freshness-cmp.pdf", width = 4, height = 3)
+
