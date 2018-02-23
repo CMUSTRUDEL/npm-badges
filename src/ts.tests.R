@@ -47,16 +47,12 @@ mod.ts.tests = lme4::lmer(log(testBytes+1) ~
 
 ## Diagnostics
 
-# library(RCurl)
-# script <- getURL("https://raw.githubusercontent.com/aufrank/R-hacks/master/mer-utils.R", ssl.verifypeer = FALSE)
-# eval(parse(text = script))
-# 
-# vif.mer(mtrdd)
-# summary(mtrdd)
-# anova(mtrdd)
+# vif.mer(mod.ts.tests)
+# summary(mod.ts.tests)
+# anova(mod.ts.tests)
 # 
 # require(MuMIn)
-# r.squaredGLMM(mtrdd)
+# r.squaredGLMM(mod.ts.tests)
 
 
 # RDD boxplots

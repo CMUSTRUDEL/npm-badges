@@ -38,3 +38,35 @@ mod.ts.prtests = glmer(proportion ~
 	family="binomial",
 	glmerControl(optimizer="bobyqa", optCtrl = list(maxfun=1e5)),
 	weights=prs)
+
+## Diagnostics
+
+# vif.mer(mod.ts.prtests)
+# summary(mod.ts.prtests)
+# Anova(mod.ts.prtests, type=2)
+# 
+# require(MuMIn)
+# r.squaredGLMM(mod.ts.prtests)
+
+
+
+# RDD boxplots
+
+ggplot(df.ts.prtests, aes(x=factor(month_idx), y=proportion)) + 
+  geom_boxplot()+ #outlier.size = -10, coef = 100)  +
+  # stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
+  # coord_fixed(ratio=1.65) + 
+  geom_vline(xintercept=10, col="purple", lwd=8, alpha=0.5) + 
+  labs(x = "Month index relative to badge", y = "Fraction PRs with tests") + 
+  ggtitle("PR Best Practices") +
+  scale_y_continuous(limits = c(0, 0.5)) +
+  theme_bw() +
+  theme(#legend.position = c(0.8, 0.1), 
+    #legend.direction="horizontal",
+    axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank())
+
+ggsave("../plots/rdd-pr-tests2.pdf", width = 3.5, height = 3)
