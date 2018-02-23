@@ -66,6 +66,8 @@ mod.test.logit.full = glm((test_bytes>0) ~  log(age+1) +
 	family="binomial")
 
 
+# Beanplots
+
 # df = subset(td.test, test_bytes < 10000000 & test_bytes > 100)
 df = subset(df.tests, test_bytes < 10000000)
 bp = data.frame(resp=df$test_bytes,

@@ -44,3 +44,42 @@ mod.ts.tests = lme4::lmer(log(testBytes+1) ~
              intervention * hasOther +
              (1 + time_after_intervention | slug),
            data=subset(df.ts.tests, time!=10))
+
+## Diagnostics
+
+# library(RCurl)
+# script <- getURL("https://raw.githubusercontent.com/aufrank/R-hacks/master/mer-utils.R", ssl.verifypeer = FALSE)
+# eval(parse(text = script))
+# 
+# vif.mer(mtrdd)
+# summary(mtrdd)
+# anova(mtrdd)
+# 
+# require(MuMIn)
+# r.squaredGLMM(mtrdd)
+
+
+# RDD boxplots
+
+ggplot(subset(df.ts.tests, slug %in% unique(ci_data$slug) |
+                          slug %in% unique(cov_data$slug) ),
+       aes(x=factor(month), y=testBytes/projBytes)) +
+  geom_boxplot()+ #outlier.size = -10, coef = 100)  +
+  # stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") +
+  # coord_fixed(ratio=1.65) +
+  geom_vline(xintercept=10, col="purple", lwd=4, alpha=0.5) +
+  scale_x_discrete(breaks = c(-8, -6, -4, -2, 0, 2, 4, 6, 8)) +
+  labs(x = "Month index relative to badge", y = "Test Suite Size / Project Size") +
+  ggtitle("Test Suite Quality") +
+  scale_y_continuous(limits = c(0, 0.5)) +
+  theme_bw() +
+  theme(#legend.position = c(0.8, 0.1),
+    #legend.direction="horizontal",
+    axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank())
+
+ggsave("../plots/rdd-test-size.pdf", width = 3.5, height = 3)
+
