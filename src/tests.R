@@ -64,3 +64,38 @@ mod.test.logit.full = glm((test_bytes>0) ~  log(age+1) +
 	hasExtraBadge,
 	data=df.tests,
 	family="binomial")
+
+
+# df = subset(td.test, test_bytes < 10000000 & test_bytes > 100)
+df = subset(df.tests, test_bytes < 10000000)
+bp = data.frame(resp=df$test_bytes,
+                has_badge=df$hasQABadge=="1",
+                group=rep("QA",nrow(df)))
+bp = rbind(bp, data.frame(resp=df$test_bytes,
+                          has_badge=(df$hasInfoBadge=="1"),
+                          group=rep("Info",nrow(df))))
+
+pdf(file="../plots/test_bytes.pdf", width=2.5, height=2.5)
+par(mar=c(4, 4, 1, 0))
+beanplot((resp+1) ~ has_badge * group, data=subset(bp, resp<=10^6), ll = 0.04,
+         # main = "Test suite size", 
+         ymax=c(0,10^4),
+         side = "both", xlab="", ylab="Test Folder (Bytes)",
+         col = list("lightblue", c("purple", "black")), 
+         overallline="median", beanlines="median", boxwex=0.9,
+         axes=F, bw="nrd", what=c(0,1,1,0), cutmin=0, cutmax=10^3, log="y")
+axis(1, at=1:length(unique(bp$group)),  labels=c("QA", "Info"))
+yrange = 0:10^5 #ceiling(log10(max(df$downloads)))+1
+axis(2, at=sapply(yrange, function(i) 10^(2*i)), 
+     labels=sapply(yrange, function(i) as.expression(bquote(10^ .((2*i))))))
+# legend("topright", fill = c("lightblue", "purple"), inset = .01,
+#        legend = c("FALSE", "TRUE"), box.lty=0, box.col = "white", 
+#        bg = "white", horiz=T, title="Has badge:") 
+# legend("topright", inset = .01, fill = c("lightblue", "purple"),
+#        legend = c("Has badge: FALSE", "Has badge: TRUE"), box.lty=0, box.col = "white",
+#        bg = "white", horiz=T) #title="Has badge:",
+mtext(c(paste("(",round(cohen_func(df.tests, "hasQABadge", "test_bytes")$estimate,2),")", sep=""),
+        paste("(",round(cohen_func(df.tests, "hasInfoBadge", "test_bytes")$estimate,2),")", sep="")),
+      side=1,line=2,at=1:5)
+dev.off()
+

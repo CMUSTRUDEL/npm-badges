@@ -100,12 +100,6 @@ bp_plots = function(zz.bot, main, legend_position){
          bg = "white", horiz=T)#, title="Has badge:") 
 }
 
-cohen_func = function(zz.all, badge, resp){
-  w = zz.all[zz.all[,which(names(zz.all) == badge)]=="1",]
-  wo = zz.all[zz.all[,which(names(zz.all) == badge)]=="0",]
-  cliff.delta(w[,which(names(w) == resp)], wo[,which(names(wo) == resp)])
-}
-
 pdf(file="../plots/popularity_monthly.pdf", width=4, height=2.5)
 par(mar=c(4, 4, 1, 0))
 bp_plots(subset(df.downloads, downloads>0 & downloads<=10^6), "Popularity", "topright")

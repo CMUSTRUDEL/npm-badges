@@ -33,6 +33,12 @@ if(!exists("badges_include")) {
 	ts.downloads = read.csv("../data/timeseries_downloads.csv")
 	npm_inflation = read.csv("../data/npm_inflation.csv")
 
+	cohen_func = function(zz.all, badge, resp){
+	  w = zz.all[zz.all[,which(names(zz.all) == badge)]=="1",]
+	  wo = zz.all[zz.all[,which(names(zz.all) == badge)]=="0",]
+	  cliff.delta(w[,which(names(w) == resp)], wo[,which(names(wo) == resp)])
+	}
+	
 	badges_include = TRUE
 	print("Complete.")
 }
