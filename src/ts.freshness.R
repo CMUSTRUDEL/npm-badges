@@ -17,6 +17,7 @@ df.ts.fresh$intervention = as.factor(df.ts.fresh$intervention)
 
 # Cut off ends for consistency with other data
 df.ts.fresh = subset(df.ts.fresh, time >= 4 & time <= 22)
+df.ts.fresh$month = rep(seq(-9, 9, 1), length(df.ts.fresh$id)/19)
 
 df.ts.fresh$hasDepmgr = factor(df.ts.fresh$hasDepmgr)
 df.ts.fresh$hasInfo = factor(df.ts.fresh$hasInfo)
@@ -76,7 +77,7 @@ sFR = subset(sFR, (hasInfo=="hasInfo: FALSE" & hasDepmgr=="hasDepMgmt: TRUE") |
                (hasInfo=="hasInfo: TRUE" & hasDepmgr=="hasDepMgmt: FALSE"))
 
 ggplot(sFR, 
-       aes(x = factor(time), y = freshness )) + 
+       aes(x = factor(month), y = freshness )) + 
   geom_boxplot(outlier.size=0.5)  +
   facet_grid(. ~ hasInfo*hasDepmgr) +
   geom_vline(xintercept=10, col="purple", lwd=2, alpha=0.5) + 
@@ -94,5 +95,5 @@ ggplot(sFR,
         panel.background = element_blank()) + 
   theme(strip.background = element_blank());
 
-ggsave("~/R/badges/rdd-freshness-cmp.pdf", width = 4, height = 3)
+ggsave("../plots/rdd-freshness-cmp.pdf", width = 4, height = 3)
 
