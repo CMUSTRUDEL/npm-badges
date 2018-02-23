@@ -180,7 +180,7 @@ r.ts.downloads = r.squaredGLMM(mod.ts.downloads)
 
 stargazer(mod.downloads.base, mod.downloads.full, mod.num.badges, mod.ts.downloads,
 title="Download counts per (1-3) month of the study (4) month, as available",
-column.labels=c("Base Model", "Full Model", "Num. Badges", "RDD"),
+column.labels=c("Base Model", "Full Model", "Num. Badges", "RDD"), 
 report="vc*",
 single.row=TRUE,
 omit.stat = c("all"),
@@ -214,6 +214,59 @@ In the effect plot below, the slope is smaller for hasQA = 1.
 ```{r}
 plot(effect("time_after*hasQA",mod=mod.ts.downloads), more=TRUE)
 ```
+
+```{r include=FALSE}
+# Nonlinearity in num badges
+
+toolvalues <- seq(0, 12, 1)
+s = subset(df.downloads, isPopular==TRUE)
+prd_base <- data.frame(num_badges = toolvalues, 
+                       num_badges_sq = toolvalues^2,
+                       age=mean(s$age),
+                       dependents=mean(s$dependents),
+                       contributors=mean(s$contributors),
+                       num_maintainers=mean(s$num_maintainers),
+                       size=mean(s$size),
+                       revisions=mean(s$revisions),
+                       stars=mean(s$stars),
+                       num_issues=mean(s$num_issues),
+                       readme_size=mean(s$readme_size),
+                       hasPopularityBadge=T, hasCIBadge=T, hasCovBadge=T)
+
+prdT = prd_base
+prdT$isPopular = "TRUE"
+errT <- predict(mod.num.badges, newdata = prdT, type="response", se.fit = TRUE)
+prdT$lci <- errT$fit - 1.96 * errT$se.fit
+prdT$downloads <- errT$fit
+prdT$uci <- errT$fit + 1.96 * errT$se.fit
+
+library(RColorBrewer)
+cbbPalette <- brewer.pal(9, "Set1")
+# c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+ggplot(prdT, aes(num_badges)) +
+  theme_bw() +
+  theme(legend.position = c(0.4, 0.2), 
+        legend.direction="horizontal",
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) +
+  ggtitle("Badge Overload Effects") +
+  ylab("Downloads") + xlab("Number of distinct badges") +
+  # geom_smooth(data=prdF, aes(y = downloads, ymin = lci, ymax = uci, color="False"), stat = "identity") +
+  geom_smooth(data=prdT, aes(y = downloads, ymin = lci, ymax = uci, color="True"), stat = "identity") +
+  # scale_y_continuous(limits = c(0, 15000)) +
+  scale_x_continuous(breaks = c(0, 2, 4, 6, 8, 10, 12)) +
+  scale_color_manual(name="isPopular",
+                     values=c(False=cbbPalette[5], True=cbbPalette[2]))
+
+ggsave("../plots/nonlinPop.pdf", width = 3, height = 2.7)
+
+```
+
+
 
 \newpage
 

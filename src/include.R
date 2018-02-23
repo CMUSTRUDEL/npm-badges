@@ -13,6 +13,7 @@ if(!exists("badges_include")) {
 	require(pROC)
 	require(plyr)
   require(beanplot)
+  require(RColorBrewer)
 
 	print("Loading data.")
 	package_info = read.csv("../data/master_info.csv")

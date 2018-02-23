@@ -21,6 +21,7 @@ df.downloads = subset(df.downloads, !is.na(size) &
 	!is.na(age) &
 	!is.na(downloads) &
 	!is.na(ght_age) &
+	!is.na(readme_size) &
 	size > 0 &
 	num_issues <= 10000 & # long tail
 	dependents <= 10000 &
@@ -66,7 +67,7 @@ f.num.badges = (downloads ~
 
 mod.downloads.base = glm.nb(f.downloads.base, data=df.downloads, control=glm.control(maxit=100))
 mod.downloads.full = glm.nb(f.downloads.full, data=df.downloads, control=glm.control(maxit=100))
-mod.num.badges = glm.nb(f.num.badges, data=df.downloads)
+mod.num.badges = glm.nb(f.num.badges, data=subset(df.downloads, isPopular=="TRUE"))
 
 
 bp_plots = function(zz.bot, main, legend_position){
