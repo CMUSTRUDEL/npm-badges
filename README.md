@@ -8,7 +8,6 @@ Appendices, data sets, and R scripts for:
 "Adding Sparkle to Social Coding: An Empirical Study of Repository Badges in the npm Ecosystem."
 Asher Trockman, Shurui Zhou, Christian Kästner, and Bogdan Vasilescu.
 In Proceedings of the International Conference on Software Engineering, ICSE, ACM (2018).
-
 ```
 
 ## R scripts
@@ -19,7 +18,7 @@ You can run the R scripts on the CSV files in the repository to estimate the dif
 
 Make sure you have R installed. We tested this on R 3.3.2.
 
-We require the following dependencies: `RMySQL, lme4, lmerTest, MuMIn, car, MASS, effects, effsize, sqldf, MASS, pROC, plyr, beanplot, RColorBrewer`.
+We require the following dependencies: `lme4, lmerTest, MuMIn, car, MASS, effects, effsize, sqldf, MASS, pROC, plyr, beanplot, RColorBrewer, ggplot2`.
 
 It may be necessary to change the Pandoc environment variable in `make.R`: the required path can be found by running `Sys.getenv("RSTUDIO_PANDOC")` in RStudio. If you are using OS X with an existing RStudio installation, this step is probably not neeeded.
 
