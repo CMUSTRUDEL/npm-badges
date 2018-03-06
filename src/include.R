@@ -1,6 +1,5 @@
 if(!exists("badges_include")) {
 	print("Loading packages.")
-	require(RMySQL)
 	require(lme4)
 	require(lmerTest)
 	require(MuMIn)
@@ -12,8 +11,9 @@ if(!exists("badges_include")) {
 	require(MASS)
 	require(pROC)
 	require(plyr)
-  require(beanplot)
-  require(RColorBrewer)
+    require(beanplot)
+    require(RColorBrewer)
+    require(ggplot2)
 
 	print("Loading data.")
 	package_info = read.csv("../data/master_info.csv")
@@ -57,9 +57,7 @@ if(!exists("badges_include")) {
 	#   names(v) <- nam
 	#   v
 	# }
-	require(RCurl)
-	script <- getURL("https://raw.githubusercontent.com/aufrank/R-hacks/master/mer-utils.R", ssl.verifypeer = FALSE)
-	eval(parse(text = script))
+	source('mer-utils.R')
 	
 	
 	badges_include = TRUE
